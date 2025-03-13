@@ -420,75 +420,161 @@ fetch('http://localhost:3000/menu')
     const offerSlider = document.querySelector('.offer__slider');
     const currentNumber = offerSlider.querySelector('#current');
     const totaltNumber = offerSlider.querySelector('#total');
-    const sliderSlides = offerSlider.querySelectorAll('.offer__slide') 
-    const sliderCounterWrap = offerSlider.querySelector('.offer__slider-counter') 
-    let currentIndex = 1;
+    const sliderSlides = offerSlider.querySelectorAll('.offer__slide'); 
+    // const sliderCounterWrap = offerSlider.querySelector('.offer__slider-counter');
+    const sliderPrevArrow = offerSlider.querySelector('.offer__slider-prev');
+    const sliderNextArrow = offerSlider.querySelector('.offer__slider-next');
+    const sliderWrapper = offerSlider.querySelector('.offer__slider-wrapper');
+    const sliderField = offerSlider.querySelector('.offer__slider-inner');
+    // Ширина одного слайду відносно обгортки
+    const width = window.getComputedStyle(sliderWrapper).width;
 
-
-    function hideSlide() {
-        sliderSlides.forEach( item => {
-            item.classList.add('hide');
-            item.classList.remove('show', 'fade');
-        });
-    }
-
-
-    function showSlide (i = 0) {  
-        currentIndex >=10 ? currentNumber.textContent = `${currentIndex}` : currentNumber.textContent = `0${currentIndex}`;
-        sliderSlides.length >= 10 ? totaltNumber.textContent = `${sliderSlides.length}` : totaltNumber.textContent = `0${sliderSlides.length}`;
-
-        // totaltNumber.textContent = `0${sliderSlides.length}`; 
-        sliderSlides[i].classList.add('show', 'fade');
-        sliderSlides[i].classList.remove('hide');
-        
-    };
-
-    hideSlide();
-    showSlide();
-
-
-    function currentSlide() {
-        sliderSlides.forEach((slide, index) => {
-            if(index == currentIndex-1) {
-                hideSlide();
-                showSlide(index);
-            }
-        });
-    }
-
-
-    function showCurrentSlideNumber(target) {
+   
     
-        if(target.parentElement.classList.contains('offer__slider-prev')) {
-            currentIndex -= 1;
-            
-            // currentNumber.textContent = `0${currentIndex}`;
-            currentSlide();
-            if(currentIndex <= 0) {
-                currentIndex = sliderSlides.length;
-                // currentNumber.textContent = `0${currentIndex}` ;
-                currentSlide();
-            }
-        } else if (target.parentElement.classList.contains('offer__slider-next')) {
+
+
+    let currentIndex = 1;
+    let offset = 0;
+
+    if(sliderSlides.length < 10) {
+        totaltNumber.textContent = `0${sliderSlides.length}`;
+        currentNumber.textContent = `0${currentIndex}`; 
+    } else {
+        totaltNumber.textContent = sliderSlides.length;
+        currentNumber.textContent = currentIndex;
+    }
+
+//  sliderField -  встановлюємо ширину блоку 100% * 4
+    sliderField.style.width = 100 * sliderSlides.length + '%';
+    sliderField.style.display = 'flex';
+    sliderField.style.transition = '0.5s all';
+
+    sliderWrapper.style.overflow = 'hidden';
+
+  
+    
+
+    // Щоб кожен слайд займав ширину обертки визначени попереду
+    sliderSlides.forEach(slide => {
+        slide.style.width = width
+    })
+
+    sliderNextArrow.addEventListener('click', () => {
+        // перевіряємо якщо  ми дійшли до кінця ширини всіх слайдів, то починаємо спочвтку
+        if(offset == +width.slice(0, width.length - 2) * (sliderSlides.length - 1)) {
+            offset = 0
+        } else {
+            //  добавляємо до offset ширину слайду
+            offset += +width.slice(0, width.length - 2);
+        }
+        sliderField.style.transform = `translateX(-${offset}px)`;
+
+        if(currentIndex == sliderSlides.length) {
+            currentIndex = 1;
+        } else {
             currentIndex += 1;
-            // currentNumber.textContent = `0${currentIndex}`;
-            currentSlide();
-            if(currentIndex > sliderSlides.length) {
-                currentIndex = 1;
-                // currentNumber.textContent = `0${currentIndex}`;
-                currentSlide(); 
-            }
         }
 
-        
-    }
+        if(sliderSlides.length < 10) {
+            currentNumber.textContent = `0${currentIndex}`; 
+        } else {
+            currentNumber.textContent = currentIndex;
+        }
 
-
-    sliderCounterWrap.addEventListener('click', (event) => {
-        const target = event.target;
-        showCurrentSlideNumber(target);
-        
     });
+
+
+    sliderPrevArrow.addEventListener('click', () => {
+        // перевіряємо якщо  ми дійшли до початку ширини всіх слайдів - 1, то переходимо в кінець
+        if(offset == 0) {
+          
+            offset = +width.slice(0, width.length - 2) * (sliderSlides.length - 1);
+        } else {
+            //  добавляємо до offset ширину слайду
+            offset -= +width.slice(0, width.length - 2);
+        }
+        sliderField.style.transform = `translateX(-${offset}px)`;
+
+        if(currentIndex <= 1) {
+            currentIndex = sliderSlides.length;
+        } else {
+            currentIndex -= 1;
+        }
+
+        if(sliderSlides.length < 10) {
+            currentNumber.textContent = `0${currentIndex}`; 
+        } else {
+            currentNumber.textContent = currentIndex;
+        }
+
+    });
+
+
+
+
+
+    // function hideSlide() {
+    //     sliderSlides.forEach( item => {
+    //         item.classList.add('hide');
+    //         item.classList.remove('show', 'fade');
+    //     });
+    // }
+
+
+    // function showSlide (i = 0) {  
+    //     currentIndex >=10 ? currentNumber.textContent = `${currentIndex}` : currentNumber.textContent = `0${currentIndex}`;
+    //     sliderSlides.length >= 10 ? totaltNumber.textContent = `${sliderSlides.length}` : totaltNumber.textContent = `0${sliderSlides.length}`;
+
+    //     sliderSlides[i].classList.add('show', 'fade');
+    //     sliderSlides[i].classList.remove('hide');
+        
+    // };
+
+    // hideSlide();
+    // showSlide();
+
+
+    // function currentSlide() {
+    //     sliderSlides.forEach((slide, index) => {
+    //         if(index == currentIndex-1) {
+    //             hideSlide();
+    //             showSlide(index);
+    //         }
+    //     });
+    // }
+
+
+    // function showCurrentSlideNumber(target) {
+    
+    //     if(target.parentElement.classList.contains('offer__slider-prev')) {
+    //         currentIndex -= 1;
+    //         // currentNumber.textContent = `0${currentIndex}`;
+    //         currentSlide();
+    //         if(currentIndex <= 0) {
+    //             currentIndex = sliderSlides.length;
+    //             // currentNumber.textContent = `0${currentIndex}` ;
+    //             currentSlide();
+    //         }
+    //     } else if (target.parentElement.classList.contains('offer__slider-next')) {
+    //         currentIndex += 1;
+    //         // currentNumber.textContent = `0${currentIndex}`;
+    //         currentSlide();
+    //         if(currentIndex > sliderSlides.length) {
+    //             currentIndex = 1;
+    //             // currentNumber.textContent = `0${currentIndex}`;
+    //             currentSlide(); 
+    //         }
+    //     }
+
+        
+    // }
+
+
+    // sliderCounterWrap.addEventListener('click', (event) => {
+    //     const target = event.target;
+    //     showCurrentSlideNumber(target);
+        
+    // });
 
 
 });
