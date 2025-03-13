@@ -457,7 +457,54 @@ fetch('http://localhost:3000/menu')
     // Щоб кожен слайд займав ширину обертки визначени попереду
     sliderSlides.forEach(slide => {
         slide.style.width = width
-    })
+    });
+
+    offerSlider.style.position = 'relative';
+
+    const indicators = document.createElement('ol'),
+          dots =[];
+    indicators.classList.add('carousel-indicators');
+    indicators.style.cssText = `
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 15;
+        display: flex;
+        justify-content: center;
+        margin-right: 15%;
+        margin-left: 15%;
+        list-style: none;
+    `;
+
+    offerSlider.append(indicators);
+
+    for (let i = 0; i < sliderSlides.length; i++) {
+        const dot = document.createElement('li');
+        dot.setAttribute('data-slide-to', i + 1);
+        dot.style.cssText = `
+            box-sizing: content-box;
+            flex: 0 1 auto;
+            width: 30px;
+            height: 6px;
+            margin-right: 3px;
+            margin-left: 3px;
+            cursor: pointer;
+            background-color: #fff;
+            background-clip: padding-box;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            opacity: .5;
+            transition: opacity .6s ease;
+        `;
+
+        if(i == 0) {
+            dot.style.opacity = 1;
+        }
+
+        indicators.append(dot);
+        dots.push(dot);
+    }
 
     sliderNextArrow.addEventListener('click', () => {
         // перевіряємо якщо  ми дійшли до кінця ширини всіх слайдів, то починаємо спочвтку
@@ -481,6 +528,33 @@ fetch('http://localhost:3000/menu')
             currentNumber.textContent = currentIndex;
         }
 
+        dots.forEach(dot => dot.style.opacity = '.5');
+        dots[currentIndex -1].style.opacity = 1;
+
+       
+    });
+
+    dots.forEach(dot => {
+        dot.addEventListener('click', (e) => {
+            // Записуємо індекс навігаційної крапки в змінну slideTo
+            const slideTo = e.target.getAttribute('data-slide-to');
+            
+            currentIndex = slideTo;
+
+            offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+            sliderField.style.transform = `translateX(-${offset}px)`;
+
+
+            if(sliderSlides.length < 10) {
+                currentNumber.textContent = `0${currentIndex}`; 
+            } else {
+                currentNumber.textContent = currentIndex;
+            }
+
+            dots.forEach(dot => dot.style.opacity = '.5');
+            dots[currentIndex -1].style.opacity = 1;
+            
+        });
     });
 
 
@@ -507,6 +581,8 @@ fetch('http://localhost:3000/menu')
             currentNumber.textContent = currentIndex;
         }
 
+        dots.forEach(dot => dot.style.opacity = '.5');
+        dots[currentIndex -1].style.opacity = 1;
     });
 
 
