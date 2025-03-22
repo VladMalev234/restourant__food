@@ -1,18 +1,22 @@
 
 
-function slider() {
+function slider({container, slide, nextArrow, prevArrow, 
+    totalCounter, currentCounter, wrapper, field}) {
 
     // slider
 
-    const offerSlider = document.querySelector('.offer__slider');
-    const currentNumber = offerSlider.querySelector('#current');
-    const totaltNumber = offerSlider.querySelector('#total');
-    const sliderSlides = offerSlider.querySelectorAll('.offer__slide'); 
+    let currentIndex = 1;
+    let offset = 0;
+
+    const offerSlider = document.querySelector(container);
+    const currentNumber = offerSlider.querySelector(currentCounter);
+    const totaltNumber = offerSlider.querySelector(totalCounter);
+    const sliderSlides = offerSlider.querySelectorAll(slide); 
     // const sliderCounterWrap = offerSlider.querySelector('.offer__slider-counter');
-    const sliderPrevArrow = offerSlider.querySelector('.offer__slider-prev');
-    const sliderNextArrow = offerSlider.querySelector('.offer__slider-next');
-    const sliderWrapper = offerSlider.querySelector('.offer__slider-wrapper');
-    const sliderField = offerSlider.querySelector('.offer__slider-inner');
+    const sliderPrevArrow = offerSlider.querySelector(prevArrow);
+    const sliderNextArrow = offerSlider.querySelector(nextArrow);
+    const sliderWrapper = offerSlider.querySelector(wrapper);
+    const sliderField = offerSlider.querySelector(field);
     // Ширина одного слайду відносно обгортки
     const width = window.getComputedStyle(sliderWrapper).width;
 
@@ -20,8 +24,7 @@ function slider() {
 
 
 
-    let currentIndex = 1;
-    let offset = 0;
+  
 
     if(sliderSlides.length < 10) {
         totaltNumber.textContent = `0${sliderSlides.length}`;
@@ -247,4 +250,4 @@ function slider() {
 
 }
 
-module.exports = slider;
+export default  slider;

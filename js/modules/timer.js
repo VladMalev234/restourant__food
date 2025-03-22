@@ -1,12 +1,10 @@
 
 
-function timer() {
+function timer(id, deadline) {
 
 
 
     // Timer
-
-    const deadline = '2025-02-12'
 
     // різниця між дедлайном і теперішім часом
 
@@ -70,7 +68,7 @@ function timer() {
         }
 
 
-        setClock('.timer', deadline);
+        setClock(id, deadline);
 }
 
-module.exports = timer;
+export default  timer;

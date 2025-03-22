@@ -1,4 +1,4 @@
-
+import { getResource } from "../services/services";
 
 function cards() {
 
@@ -58,15 +58,6 @@ function cards() {
 
         }
 
-        
-        const getResource = async (url) => {
-            const res = await fetch(url);
-
-            if(!res.ok){
-                throw new Error(`Coul not fetch ${url}, status ${res.status}`);
-            }
-            return await res.json();
-        };
 
 
         getResource('http://localhost:3000/menu')
@@ -113,4 +104,4 @@ function cards() {
 
 }
 
-module.exports = cards;
+export default cards;
